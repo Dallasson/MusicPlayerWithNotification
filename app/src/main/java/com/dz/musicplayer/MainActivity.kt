@@ -68,12 +68,12 @@ class MainActivity : AppCompatActivity(),ActionPlaying , ServiceConnection{
         binding.trackName.text = tracksList[currentPosition].singer
         if(!isPlaying){
             isPlaying = true
-            binding.play.setImageResource(R.drawable.ic_pause_black)
-            showNotification(R.drawable.ic_pause_black)
-        } else {
-            isPlaying = false
             binding.play.setImageResource(R.drawable.ic_play_black)
             showNotification(R.drawable.ic_play_black)
+        } else {
+            isPlaying = false
+            binding.play.setImageResource(R.drawable.ic_pause_black)
+            showNotification(R.drawable.ic_pause_black)
         }
     }
 
@@ -85,24 +85,24 @@ class MainActivity : AppCompatActivity(),ActionPlaying , ServiceConnection{
         binding.trackName.text = tracksList[currentPosition].singer
         if(!isPlaying){
             isPlaying = true
-            binding.play.setImageResource(R.drawable.ic_pause_black)
-            showNotification(R.drawable.ic_pause_black)
-        } else {
-            isPlaying = false
             binding.play.setImageResource(R.drawable.ic_play_black)
             showNotification(R.drawable.ic_play_black)
+        } else {
+            isPlaying = false
+            binding.play.setImageResource(R.drawable.ic_pause_black)
+            showNotification(R.drawable.ic_pause_black)
         }
     }
 
     override fun playClicked() {
         if(!isPlaying){
             isPlaying = true
-            binding.play.setImageResource(R.drawable.ic_pause_black)
-            showNotification(R.drawable.ic_pause_black)
-        } else {
-            isPlaying = false
             binding.play.setImageResource(R.drawable.ic_play_black)
             showNotification(R.drawable.ic_play_black)
+        } else {
+            isPlaying = false
+            binding.play.setImageResource(R.drawable.ic_pause_black)
+            showNotification(R.drawable.ic_pause_black)
         }
     }
 
@@ -111,6 +111,7 @@ class MainActivity : AppCompatActivity(),ActionPlaying , ServiceConnection{
         val iBinder = service as MusicBoundService.myBinder
         musicBoundService = iBinder.getService()
         isServiceBound = true
+        musicBoundService.actionCallBack(this)
         Log.d("ServiceTag","Service is Bound")
 
     }
@@ -149,9 +150,9 @@ class MainActivity : AppCompatActivity(),ActionPlaying , ServiceConnection{
                 .setContentText(tracksList[currentPosition].singer)
                 .setLargeIcon(bitMapThumbnail)
                 .setSmallIcon(R.drawable.ic_baseline_notifications_active_24)
-                .addAction(R.drawable.ic_skip_previous_black,"Previous",prevBtnPendingInt)
-                .addAction(playPauseBtn,"Play",playBtnPendingInt)
-                .addAction(R.drawable.ic_skip_next_black,"Next",nextBtnPendingInt)
+                .addAction(R.drawable.ic_skip_previous_black,"PREVIOUS",prevBtnPendingInt)
+                .addAction(playPauseBtn,"PLAY",playBtnPendingInt)
+                .addAction(R.drawable.ic_skip_next_black,"NEXT",nextBtnPendingInt)
                 .setAutoCancel(false)
                 .setStyle(androidx.media.app.NotificationCompat.MediaStyle()
                         .setMediaSession(mediaSession.sessionToken))

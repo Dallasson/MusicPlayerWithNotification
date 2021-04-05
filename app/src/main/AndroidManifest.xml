@@ -18,6 +18,14 @@
             </intent-filter>
         </activity>
         <service android:name=".service.MusicBoundService"/>
+        <receiver android:name=".receiver.NotificationReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="ACTION_NEXT"/>
+                <action android:name="ACTION_PREVIOUS"/>
+                <action android:name="ACTION_PLAY"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
