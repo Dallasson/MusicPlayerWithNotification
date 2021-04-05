@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dz.musicplayer">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:name=".notification.BaseApplication"
         android:allowBackup="true"
@@ -21,9 +22,9 @@
         <receiver android:name=".receiver.NotificationReceiver"
             android:enabled="true">
             <intent-filter>
-                <action android:name="ACTION_NEXT"/>
                 <action android:name="ACTION_PREVIOUS"/>
                 <action android:name="ACTION_PLAY"/>
+                <action android:name="ACTION_NEXT"/>
             </intent-filter>
         </receiver>
     </application>

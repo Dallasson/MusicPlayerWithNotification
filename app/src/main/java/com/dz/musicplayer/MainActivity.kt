@@ -8,7 +8,9 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.BitmapFactory
+import android.media.MediaPlayer
 import android.media.session.MediaSession
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
@@ -20,11 +22,14 @@ import com.dz.musicplayer.databinding.ActivityMainBinding
 import com.dz.musicplayer.extras.ActionPlaying
 import com.dz.musicplayer.receiver.NotificationReceiver
 import com.dz.musicplayer.service.MusicBoundService
+import java.net.URL
 import java.util.*
 
 class MainActivity : AppCompatActivity(),ActionPlaying , ServiceConnection{
     private lateinit var tracksList : MutableList<TrackModel>
+    private lateinit var tracksUrl : MutableList<Uri>
     private lateinit var mediaSession: MediaSessionCompat
+    private lateinit var mediaPlayer: MediaPlayer
     private var isPlaying = false
     private var isServiceBound = false
     private var currentPosition = 0
@@ -38,8 +43,10 @@ class MainActivity : AppCompatActivity(),ActionPlaying , ServiceConnection{
 
 
         tracksList = mutableListOf()
+        tracksUrl = mutableListOf()
         mediaSession = MediaSessionCompat(this,"TAG")
         populateTracksList()
+        populateTracksUrls()
 
         binding.skipNext.setOnClickListener {
             nextClicked()
@@ -53,6 +60,12 @@ class MainActivity : AppCompatActivity(),ActionPlaying , ServiceConnection{
         
     }
 
+    private fun populateTracksUrls(){
+        tracksUrl.add(Uri.parse("https://cdnm.meln.top/mr/Akon%20-%20Burning%20Alive.mp3?session_key=665c0455ef61afa2b129a03a06c00098&hash=5c1ad259810a0af78881366cf7bdd3e4"))
+        tracksUrl.add(Uri.parse("https://cdnm.meln.top/mr/Akon%20-%20Right%20Now.mp3?session_key=665c0455ef61afa2b129a03a06c00098&hash=e3be2d34dc8764b8aa721d60852dfa15"))
+        tracksUrl.add(Uri.parse("https://cdnm.meln.top/mr/Akon%20-%20Akon%20-%20Struggle%20everyday.mp3?session_key=665c0455ef61afa2b129a03a06c00098&hash=135e4297cc38cabf0a6eafe8b4c5468f"))
+        tracksUrl.add(Uri.parse("https://cdnm.meln.top/mr/Akon%20-%20Bananza%20(Belly%20Dancer).mp3?session_key=665c0455ef61afa2b129a03a06c00098&hash=cfe0ce236c5c492200568bb9276b57b1"))
+    }
     private fun populateTracksList() {
         tracksList.add(TrackModel("Beautiful","Akon",R.drawable.bg))
         tracksList.add(TrackModel("Dangerous","Akon",R.drawable.bg))
@@ -70,10 +83,13 @@ class MainActivity : AppCompatActivity(),ActionPlaying , ServiceConnection{
             isPlaying = true
             binding.play.setImageResource(R.drawable.ic_play_black)
             showNotification(R.drawable.ic_play_black)
+            mediaPlayer = MediaPlayer.create(this,tracksUrl[currentPosition])
+            mediaPlayer.start()
         } else {
             isPlaying = false
             binding.play.setImageResource(R.drawable.ic_pause_black)
             showNotification(R.drawable.ic_pause_black)
+            mediaPlayer.pause()
         }
     }
 
@@ -87,10 +103,13 @@ class MainActivity : AppCompatActivity(),ActionPlaying , ServiceConnection{
             isPlaying = true
             binding.play.setImageResource(R.drawable.ic_play_black)
             showNotification(R.drawable.ic_play_black)
+            mediaPlayer = MediaPlayer.create(this,tracksUrl[currentPosition])
+            mediaPlayer.start()
         } else {
             isPlaying = false
             binding.play.setImageResource(R.drawable.ic_pause_black)
             showNotification(R.drawable.ic_pause_black)
+            mediaPlayer.pause()
         }
     }
 
@@ -99,10 +118,13 @@ class MainActivity : AppCompatActivity(),ActionPlaying , ServiceConnection{
             isPlaying = true
             binding.play.setImageResource(R.drawable.ic_play_black)
             showNotification(R.drawable.ic_play_black)
+            mediaPlayer = MediaPlayer.create(this,tracksUrl[currentPosition])
+            mediaPlayer.start()
         } else {
             isPlaying = false
             binding.play.setImageResource(R.drawable.ic_pause_black)
             showNotification(R.drawable.ic_pause_black)
+            mediaPlayer.pause()
         }
     }
 
@@ -128,19 +150,19 @@ class MainActivity : AppCompatActivity(),ActionPlaying , ServiceConnection{
         val intentNextBtn = Intent(this,NotificationReceiver::class.java).apply {
             action = Constants.ACTION_NEXT
         }
-        val nextBtnPendingInt = PendingIntent.getActivity(this,1,intentNextBtn,PendingIntent.FLAG_UPDATE_CURRENT)
+        val nextBtnPendingInt = PendingIntent.getBroadcast(this,1,intentNextBtn,0)
 
         //-------------------
         val intentPrevBtn = Intent(this,NotificationReceiver::class.java).apply {
             action = Constants.ACTION_PREVIOUS
         }
-        val prevBtnPendingInt = PendingIntent.getActivity(this,1,intentPrevBtn,PendingIntent.FLAG_UPDATE_CURRENT)
+        val prevBtnPendingInt = PendingIntent.getBroadcast(this,1,intentPrevBtn,0)
 
         ///--------------------
         val intentPlayBtn = Intent(this,NotificationReceiver::class.java).apply {
             action = Constants.ACTION_PLAY
         }
-        val playBtnPendingInt = PendingIntent.getActivity(this,1,intentPlayBtn,PendingIntent.FLAG_UPDATE_CURRENT)
+        val playBtnPendingInt = PendingIntent.getBroadcast(this,1,intentPlayBtn,0)
 
 
         val bitMapThumbnail = BitmapFactory.decodeResource(resources,
@@ -159,8 +181,6 @@ class MainActivity : AppCompatActivity(),ActionPlaying , ServiceConnection{
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
 
-
-
         NotificationManagerCompat.from(this).notify(100,notification.build())
     }
     override fun onStart() {
@@ -172,6 +192,13 @@ class MainActivity : AppCompatActivity(),ActionPlaying , ServiceConnection{
 
         }
     }
+    override fun onResume() {
+        super.onResume()
+        Intent(this,MusicBoundService::class.java).apply {
+            bindService(this,this@MainActivity, BIND_AUTO_CREATE)
+        }
+
+    }
     override fun onStop() {
         super.onStop()
         if(isServiceBound){
@@ -181,7 +208,12 @@ class MainActivity : AppCompatActivity(),ActionPlaying , ServiceConnection{
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        if(mediaPlayer.isPlaying){
+            mediaPlayer.stop()
+            mediaPlayer.release()
+        }
 
     }
+
 
 }

@@ -14,13 +14,16 @@ class NotificationReceiver : BroadcastReceiver() {
         if(intent?.action != null){
             when(intent.action){
                 Constants.ACTION_PREVIOUS -> {
-                    actionIntent.putExtra("ActionName",Constants.ACTION_PREVIOUS)
+                    actionIntent.putExtra("ActionName",intent.action)
+                    context?.startService(intent)
                 }
                 Constants.ACTION_PLAY -> {
-                    actionIntent.putExtra("ActionName",Constants.ACTION_PLAY)
+                    actionIntent.putExtra("ActionName",intent.action)
+                    context?.startService(intent)
                 }
                 Constants.ACTION_NEXT -> {
-                    actionIntent.putExtra("ActionName",Constants.ACTION_NEXT)
+                    actionIntent.putExtra("ActionName",intent.action)
+                    context?.startService(intent)
                 }
             }
         }
