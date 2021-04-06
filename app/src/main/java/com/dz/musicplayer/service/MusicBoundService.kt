@@ -10,10 +10,10 @@ import java.security.Provider
 
 class MusicBoundService : Service() {
 
-      private var iBinder : IBinder = myBinder()
+      private var iBinder : IBinder = LocalBinder()
       private lateinit var actionPlaying: ActionPlaying
 
-    class myBinder(): Binder() {
+    class LocalBinder(): Binder() {
          fun getService() : MusicBoundService {
              return MusicBoundService()
          }

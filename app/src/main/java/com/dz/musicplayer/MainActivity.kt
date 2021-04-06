@@ -57,6 +57,8 @@ class MainActivity : AppCompatActivity(),ActionPlaying , ServiceConnection{
         binding.play.setOnClickListener {
             playClicked()
         }
+
+        binding.trackName.text = tracksList[currentPosition].singer + " - " + tracksList[currentPosition].title
         
     }
 
@@ -78,66 +80,66 @@ class MainActivity : AppCompatActivity(),ActionPlaying , ServiceConnection{
         else
             currentPosition++
 
-        binding.trackName.text = tracksList[currentPosition].singer
         if(!isPlaying){
-            isPlaying = true
-            binding.play.setImageResource(R.drawable.ic_play_black)
+            isPlaying = false
+            binding.play.setBackgroundResource(R.drawable.ic_play_black)
+            binding.trackName.text = tracksList[currentPosition].singer + " - " + tracksList[currentPosition].title
             showNotification(R.drawable.ic_play_black)
             mediaPlayer = MediaPlayer.create(this,tracksUrl[currentPosition])
             mediaPlayer.start()
         } else {
-            isPlaying = false
-            binding.play.setImageResource(R.drawable.ic_pause_black)
+            isPlaying = true
+            binding.play.setBackgroundResource(R.drawable.ic_pause_black)
+            binding.trackName.text = tracksList[currentPosition].singer + " - " + tracksList[currentPosition].title
             showNotification(R.drawable.ic_pause_black)
             mediaPlayer.pause()
         }
     }
-
     override fun previousClicked() {
         if(currentPosition == 0)
             currentPosition = 3
         else
             currentPosition--
-        binding.trackName.text = tracksList[currentPosition].singer
         if(!isPlaying){
-            isPlaying = true
-            binding.play.setImageResource(R.drawable.ic_play_black)
+            isPlaying = false
+            binding.play.setBackgroundResource(R.drawable.ic_play_black)
+            binding.trackName.text = tracksList[currentPosition].singer + " - " + tracksList[currentPosition].title
             showNotification(R.drawable.ic_play_black)
             mediaPlayer = MediaPlayer.create(this,tracksUrl[currentPosition])
             mediaPlayer.start()
         } else {
-            isPlaying = false
-            binding.play.setImageResource(R.drawable.ic_pause_black)
+            isPlaying = true
+            binding.play.setBackgroundResource(R.drawable.ic_pause_black)
+            binding.trackName.text = tracksList[currentPosition].singer + " - " + tracksList[currentPosition].title
             showNotification(R.drawable.ic_pause_black)
             mediaPlayer.pause()
         }
     }
-
     override fun playClicked() {
         if(!isPlaying){
-            isPlaying = true
-            binding.play.setImageResource(R.drawable.ic_play_black)
+            isPlaying = false
+            binding.play.setBackgroundResource(R.drawable.ic_play_black)
+            binding.trackName.text = tracksList[currentPosition].singer + " - " + tracksList[currentPosition].title
             showNotification(R.drawable.ic_play_black)
             mediaPlayer = MediaPlayer.create(this,tracksUrl[currentPosition])
             mediaPlayer.start()
         } else {
-            isPlaying = false
-            binding.play.setImageResource(R.drawable.ic_pause_black)
+            isPlaying = true
+            binding.play.setBackgroundResource(R.drawable.ic_pause_black)
+            binding.trackName.text = tracksList[currentPosition].singer + " - " + tracksList[currentPosition].title
             showNotification(R.drawable.ic_pause_black)
             mediaPlayer.pause()
         }
     }
 
-
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        val iBinder = service as MusicBoundService.myBinder
+        val iBinder = service as MusicBoundService.LocalBinder
         musicBoundService = iBinder.getService()
         isServiceBound = true
         musicBoundService.actionCallBack(this)
         Log.d("ServiceTag","Service is Bound")
 
     }
-
     override fun onServiceDisconnected(name: ComponentName?) {
         isServiceBound = false
         Log.d("ServiceTag","Service is unBound")

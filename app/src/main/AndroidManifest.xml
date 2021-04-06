@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.dz.musicplayer">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".notification.BaseApplication"
         android:allowBackup="true"
@@ -18,13 +20,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".service.MusicBoundService"/>
-        <receiver android:name=".receiver.NotificationReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="ACTION_PREVIOUS"/>
-                <action android:name="ACTION_PLAY"/>
-                <action android:name="ACTION_NEXT"/>
+        <service android:name=".service.MusicBoundService" />
+        <receiver
+            android:name=".receiver.NotificationReceiver"
+            android:enabled="true"
+            android:permission="TODO">
+            <intent-filter tools:ignore="IntentFilterExportedReceiver">
+                <action android:name="android.media.browse.MediaBrowserService" />
+                <action android:name="ACTION_PREVIOUS" />
+                <action android:name="ACTION_PLAY" />
+                <action android:name="ACTION_NEXT" />
             </intent-filter>
         </receiver>
     </application>

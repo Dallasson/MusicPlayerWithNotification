@@ -14,14 +14,17 @@ class NotificationReceiver : BroadcastReceiver() {
         if(intent?.action != null){
             when(intent.action){
                 Constants.ACTION_PREVIOUS -> {
+                    Toast.makeText(context,"Previous Clicked",Toast.LENGTH_SHORT).show()
                     actionIntent.putExtra("ActionName",intent.action)
                     context?.startService(intent)
                 }
                 Constants.ACTION_PLAY -> {
+                    Toast.makeText(context,"Play Clicked",Toast.LENGTH_SHORT).show()
                     actionIntent.putExtra("ActionName",intent.action)
                     context?.startService(intent)
                 }
                 Constants.ACTION_NEXT -> {
+                    Toast.makeText(context,"Next Clicked",Toast.LENGTH_SHORT).show()
                     actionIntent.putExtra("ActionName",intent.action)
                     context?.startService(intent)
                 }
